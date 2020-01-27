@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="dist/lib/gson-2.8.6.jar"/>
+	<classpathentry kind="lib" path="dist/lib/mysql-connector-java-8.0.19.jar"/>
+	<classpathentry kind="lib" path="dist/lib/netty-all-4.1.45.Final.jar"/>
+	<classpathentry kind="lib" path="dist/linuxwars-backend.jar"/>
+	<classpathentry kind="lib" path="lib/CopyLibs/org-netbeans-modules-java-j2seproject-copylibstask.jar"/>
+	<classpathentry kind="lib" path="lib/gson-2.8.6-javadoc.jar"/>
+	<classpathentry kind="lib" path="lib/gson-2.8.6.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-8.0.19.jar"/>
+	<classpathentry kind="lib" path="lib/netty-all-4.1.45.Final.jar"/>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>
