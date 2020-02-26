@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
-import game.Colors;
+import game.Color;
 import game.CommandExecutor;
 import game.CommandHandler;
 import game.player.Player;
@@ -22,6 +22,6 @@ public class CommandHelp implements CommandExecutor{
 
 	@Override
 	public void printDescription(Player player) {
-		player.sendMessage("    Print all commands", Colors.CYAN);		
+		player.sendMessage("    Print all commands", Color.CYAN);		
 	}
 }

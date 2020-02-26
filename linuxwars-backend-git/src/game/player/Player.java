@@ -3,12 +3,11 @@ package game.player;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Collections;
 import java.util.List;
 
 import com.sun.istack.internal.NotNull;
 
-import game.Colors;
+import game.Color;
 import io.netty.channel.ChannelHandlerContext;
 import main.LinuxwarsBackend;
 import websocket.WebSocketHandler;
@@ -17,10 +16,10 @@ public class Player {
 	private int player_id;
 	private String session_key;
 	private String username;
-	public List<PlayerProcess> processes = Collections.synchronizedList(new ArrayList<>());
+	private List<PlayerProcess> processes = new ArrayList<PlayerProcess>();
 	private ChannelHandlerContext client;
 	private boolean loggedin = false;
-	public int credits;
+	private int credits;
 	
 	public Player(ChannelHandlerContext client){
 		this.client = client;
@@ -45,9 +44,9 @@ public class Player {
 	 * <p>{"type":"println","message":?,"color":?}</p>
 	 * <p></p>
 	 * @param message as {@link String}
-	 * @param color as {@link Colors}
+	 * @param color as {@link Color}
 	 */
-	public void sendMessage(@NotNull String message,@NotNull Colors color) {
+	public void sendMessage(@NotNull String message,@NotNull Color color) {
 		WebSocketHandler.channelSendMessage("{\"type\":\"println\",\"message\":\""+Base64.getEncoder().encodeToString(message.getBytes())+"\",\"color\":\""+color.getColor()+"\"}", this.client);
 	}
 	
@@ -59,7 +58,7 @@ public class Player {
 	 * @param message as {@link String}
 	 */
 	public void sendMessage(@NotNull String message) {
-		WebSocketHandler.channelSendMessage("{\"type\":\"println\",\"message\":\""+Base64.getEncoder().encodeToString(message.getBytes())+"\",\"color\":\""+Colors.DEFAULT.getColor()+"\"}", this.client);
+		WebSocketHandler.channelSendMessage("{\"type\":\"println\",\"message\":\""+Base64.getEncoder().encodeToString(message.getBytes())+"\",\"color\":\""+Color.DEFAULT.getColor()+"\"}", this.client);
 	}
 		
 	/**
@@ -181,5 +180,17 @@ public class Player {
 	 */
 	public int getCredits() {
 		return this.credits;
+	}
+	
+	public void addProcess(@NotNull PlayerProcess process) {
+		this.processes.add(process);
+	}
+	
+	public List<PlayerProcess> getProcesses(){
+		return this.processes;
+	}
+	
+	public void removeProcess(@NotNull PlayerProcess process) {
+		this.processes.remove(process);
 	}
 }

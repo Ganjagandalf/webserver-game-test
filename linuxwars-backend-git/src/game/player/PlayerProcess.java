@@ -3,36 +3,34 @@ package game.player;
 import java.util.Base64;
 import java.util.Date;
 
-import game.Colors;
+import game.Color;
 import io.netty.channel.ChannelHandlerContext;
 import websocket.WebSocketHandler;
 
 public class PlayerProcess {
-	private static int next_pid;
+	private static int NEXT_PID;
 	private int process_id;
 	private long process_started;
-	private long process_till_done;
-	private Player player;
-	private ProcessTypes type;
+	private long process_ends;
+	private ProcessType type;
 	private int creditspertick;
+	private ProcessStatus status;
 	
-	public PlayerProcess(Player player, int time_needed, ProcessTypes type) {
-		this.process_id = next_pid;
-		this.type = type;
-		next_pid += 1;
-		this.player = player;
-		this.process_till_done = new Date().getTime() + (time_needed*1000);
-		this.process_started = new Date().getTime();
+	public PlayerProcess(int time_needed, ProcessType type) {
+		this.setId(NEXT_PID++);
+		this.setStatus(ProcessStatus.PROCESSING);
+		this.setType(type);
+		this.setEndTime(new Date().getTime() + (time_needed*1000));
+		this.setStartTime(new Date().getTime());
 	}
 	
-	public PlayerProcess(Player player, int time_needed, ProcessTypes type, int creditspertick) {
-		this.process_id = next_pid;
-		this.type = type;
-		this.creditspertick = creditspertick;
-		next_pid += 1;
-		this.player = player;
-		this.process_till_done = new Date().getTime() + (time_needed*1000);
-		this.process_started = new Date().getTime();
+	public PlayerProcess(int time_needed, ProcessType type, int creditspertick) {
+		this.setId(NEXT_PID++);
+		this.setStatus(ProcessStatus.PROCESSING);
+		this.setType(type);
+		this.setCreditsPerTick(creditspertick);
+		this.setEndTime(new Date().getTime() + (time_needed*1000));
+		this.setStartTime(new Date().getTime());
 	}
 	
 	/**
@@ -41,10 +39,11 @@ public class PlayerProcess {
 	 * <p>{"type":"printprocess","message":?,"processid":?,"color":?}</p>
 	 * <p></p>
 	 * @param message as {@link String}
-	 * @param color as {@link Colors}
+	 * @param color as {@link Color}
+	 * @param player as {@link Player}
 	 */
-	public void printProcess(String message, Colors color) {
-		WebSocketHandler.channelSendMessage("{\"type\":\"printprocess\",\"message\":\""+Base64.getEncoder().encodeToString(message.getBytes())+"\",\"processid\":\""+process_id+"\",\"color\":\""+color.getColor()+"\"}", player.getChannelHandlerContext());
+	public void printProcess(String message, Color color, Player player) {
+		WebSocketHandler.channelSendMessage("{\"type\":\"printprocess\",\"message\":\""+Base64.getEncoder().encodeToString(message.getBytes())+"\",\"processid\":\""+this.getId()+"\",\"color\":\""+color.getColor()+"\"}", player.getChannelHandlerContext());
 	}
 	
 	/**
@@ -53,9 +52,10 @@ public class PlayerProcess {
 	 * <p>{"type":"updateprocess","message":?,"processid":?}</p>
 	 * <p></p>
 	 * @param message as {@link String}
+	 * @param player as {@link Player}
 	 */
-	public void updateProcess(String message) {
-		WebSocketHandler.channelSendMessage("{\"type\":\"updateprocess\",\"message\":\""+Base64.getEncoder().encodeToString(message.getBytes())+"\",\"processid\":\""+process_id+"\"}",  player.getChannelHandlerContext());
+	public void updateProcess(String message, Player player) {
+		WebSocketHandler.channelSendMessage("{\"type\":\"updateprocess\",\"message\":\""+Base64.getEncoder().encodeToString(message.getBytes())+"\",\"processid\":\""+this.getId()+"\"}",  player.getChannelHandlerContext());
 	}
 	
 	/**
@@ -63,8 +63,17 @@ public class PlayerProcess {
 	 * <p></p>
 	 * @return processtype as {@link ProcessTypes}
 	 */
-	public ProcessTypes getType() {
+	public ProcessType getType() {
 		return this.type;
+	}
+	
+	/**
+	 * <h1>Set the process type</h1>
+	 * <p></p>
+	 * @param processtype as {@link ProcessTypes}
+	 */
+	public void setType(ProcessType processtype) {
+		this.type = processtype;
 	}
 	
 	/**
@@ -77,13 +86,89 @@ public class PlayerProcess {
 	}
 	
 	/**
-	 * <h1>Get the finished status in percent</h1>
-	 * <p>Returns the status in form of %</p>
-	 * @return percentage completed {@link Double}
+	 * <h1>Set the credits per tick</h1>
+	 * <p></p>
+	 * @param processtype as {@link ProcessTypes}
+	 */
+	public void setCreditsPerTick(int creditspertick) {
+		this.creditspertick = creditspertick;
+	}
+	
+	/**
+	 * <h1>Get the status in percent</h1>
+	 * <p></p>
+	 * @return percentage completed as {@link Double} in %
 	 */	
 	public double getPercent() {
-		float time_difference = process_till_done - process_started; 
-		float time_passed = new Date().getTime() - process_started;
+		float time_difference = this.getEndTime() - this.getStartTime(); 
+		float time_passed = new Date().getTime() - this.getStartTime();
 		return (100/time_difference*time_passed);
+	}
+	
+	/**
+	 * <h1>Set the {@link ProcessStatus}</h1>
+	 * <p></p>
+	 * @param status as {@link ProcessStatus}
+	 */
+	public void setStatus(ProcessStatus status) {
+		this.status = status;
+	}
+	
+	public ProcessStatus getStatus() {
+		return this.status;
+	}
+	
+	/**
+	 * <h1>Set the process id</h1>
+	 * <p></p>
+	 * @param process_id as {@link Integer}
+	 */
+	public void setId(int process_id) {
+		this.process_id = process_id;
+	}
+	
+	/**
+	 * <h1>Get the process id</h1>
+	 * <p></p>
+	 * @return process end time as unix time
+	 */
+	public int getId() {
+		return this.process_id;
+	}
+	
+	/**
+	 * <h1>Get process start time</h1>
+	 * <p></p>
+	 * @return process start time as unix time
+	 */
+	public long getStartTime() {
+		return this.process_started;
+	}
+	
+	/**
+	 * <h1>Set the start time in form of a unix time</h1>
+	 * <p></p>
+	 * @param process_started as {@link Long}
+	 */
+	public void setStartTime(long process_started) {
+		this.process_started = process_started;
+	}
+	
+	/**
+	 * <h1>Get process end time</h1>
+	 * <p></p>
+	 * @return process end time as unix time
+	 */
+	public long getEndTime() {
+		return this.process_ends;
+	}
+	
+	/**
+	 * <h1>Set the end time in form of a unix time</h1>
+	 * <p></p>
+	 * @param process_ends as {@link Long}
+	 */
+	public void setEndTime(long process_ends) {
+		this.process_ends = process_ends;
 	}
 }

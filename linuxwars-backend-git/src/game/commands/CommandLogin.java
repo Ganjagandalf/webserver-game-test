@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import game.Colors;
+import game.Color;
 import game.CommandExecutor;
 import game.Encode;
 import game.player.Player;
@@ -46,20 +46,20 @@ public class CommandLogin implements CommandExecutor{
 						}
 					}
 						
-					player.sendMessage("Username or password wrong ;/", Colors.RED);
+					player.sendMessage("Username or password wrong ;/", Color.RED);
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
 			}else {
-				player.sendMessage("Damn bro... wrong syntax o_o", Colors.RED);
+				player.sendMessage("Damn bro... wrong syntax o_o", Color.RED);
 			}
 		}else {
-			player.sendMessage("You are already logged in!", Colors.RED);
+			player.sendMessage("You are already logged in!", Color.RED);
 		}
 	}
 
 	@Override
 	public void printDescription(Player player) {
-		player.sendMessage("    login <username> <password>", Colors.CYAN);		
+		player.sendMessage("    login <username> <password>", Color.CYAN);		
 	}
 }

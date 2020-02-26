@@ -5,7 +5,7 @@ package game;
  * Simple list of Colors that can be used and interpreted by the javascript
  *
  */
-public enum Colors {
+public enum Color {
 	YELLOW("yellow"),
 	ORANGE("orange"),
 	RED("red"),
@@ -19,7 +19,7 @@ public enum Colors {
 	
 	private final String color;
 	
-	Colors(String color) {
+	Color(String color) {
 		this.color = color;
 	}
 	
@@ -27,11 +27,11 @@ public enum Colors {
 		return this.color;
 	}
 	
-	public Colors getColor(String color) {
-		for(Colors c : Colors.values()) {
+	public static Color getColor(String color) {
+		for(Color c : Color.values()) {
 			if(c.getColor().equals(color))
 				return c;
 		}
-		return Colors.DEFAULT;
+		return Color.DEFAULT;
 	}
 }

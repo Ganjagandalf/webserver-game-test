@@ -2,7 +2,7 @@ package game.commands;
 
 import java.util.ArrayList;
 
-import game.Colors;
+import game.Color;
 import game.CommandExecutor;
 import game.player.Player;
 import websocket.WebSocketHandler;
@@ -20,22 +20,22 @@ public class CommandEcho extends WebSocketHandler implements CommandExecutor{
 	            }
 	        }   
 	        if(args.size() > 0){
-	            player.sendMessage(String.join(" ", args), Colors.DEFAULT.getColor(color));
-	            player.credits += 1;
+	            player.sendMessage(String.join(" ", args), Color.getColor(color));
+	            player.setCredits(player.getCredits() + 1);
 	        }else{
-	            player.sendMessage("Wrong syntax. Usage:'echo <message>'", Colors.RED);
-	            player.sendMessage("    --color <color> => Text gets printed out in the given color", Colors.RED);
-	            player.sendMessage(" ", Colors.RED);
-	            player.sendMessage("    Paramteres can be placed in the middle of the text and dont have to be directly after the command.", Colors.RED);
+	            player.sendMessage("Wrong syntax. Usage:'echo <message>'", Color.RED);
+	            player.sendMessage("    --color <color> => Text gets printed out in the given color", Color.RED);
+	            player.sendMessage(" ", Color.RED);
+	            player.sendMessage("    Paramteres can be placed in the middle of the text and dont have to be directly after the command.", Color.RED);
 	        }
 		}else {
-			player.sendMessage("You have to be logged in to use this command!", Colors.RED);
+			player.sendMessage("You have to be logged in to use this command!", Color.RED);
 		}
 	}
 
 	@Override
 	public void printDescription(Player player) {
-		player.sendMessage("    Echo prints the given arguments to the \"console\".", Colors.CYAN);
-		player.sendMessage("        --color <color> prints the message in the given color", Colors.CYAN);
+		player.sendMessage("    Echo prints the given arguments to the \"console\".", Color.CYAN);
+		player.sendMessage("        --color <color> prints the message in the given color", Color.CYAN);
 	}
 }

@@ -2,7 +2,7 @@ package websocket;
 
 import java.util.Base64;
 
-import game.Colors;
+import game.Color;
 import game.CommandHandler;
 import game.Server;
 import game.player.Player;
@@ -51,7 +51,7 @@ public class WebSocketHandler extends ChannelInboundHandlerAdapter {
     	ctx.writeAndFlush(new TextWebSocketFrame(message));
     }
     
-    public static void sendMessage(String message, Colors color, ChannelHandlerContext ctx) {
+    public static void sendMessage(String message, Color color, ChannelHandlerContext ctx) {
     	channelSendMessage("{\"type\":\"println\",\"message\":\""+Base64.getEncoder().encodeToString(message.getBytes())+"\",\"color\":\""+color.getColor()+"\"}", ctx);
     }
 }

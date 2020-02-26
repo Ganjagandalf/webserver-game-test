@@ -49,7 +49,7 @@ public abstract class CommandHandler extends WebSocketHandler{
     
 		Player player = Server.getPlayer(ctx);
 		if(player.equals(null)) {
-			WebSocketHandler.sendMessage("Something went horribly wrong... please reload the page!", Colors.RED, ctx);
+			WebSocketHandler.sendMessage("Something went horribly wrong... please reload the page!", Color.RED, ctx);
 		}else {
 			try{
 				// Parse the String send to the webserver to a json-object.
@@ -70,7 +70,7 @@ public abstract class CommandHandler extends WebSocketHandler{
 	            	commands.get(command).onCommand(args, player);
 	            }else {
 	            	//command is not registered
-		            player.sendMessage(String.format("Command \"%s\" not found!", command), Colors.RED);
+		            player.sendMessage(String.format("Command \"%s\" not found!", command), Color.RED);
 	            }
 	            
 	            if(player.isLoggedIn()) {
@@ -81,7 +81,7 @@ public abstract class CommandHandler extends WebSocketHandler{
 	            
 	        }catch(JsonSyntaxException ex){
 	        	// Oops! JsonParse error... lets send the player a message :D Why not.
-	        	player.sendMessage("Oops! There was an error! :(", Colors.RED);
+	        	player.sendMessage("Oops! There was an error! :(", Color.RED);
 	            return;
 	        }  
 		}              
