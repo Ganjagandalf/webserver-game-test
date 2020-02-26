@@ -20,7 +20,7 @@ import java.util.HashMap;
 public abstract class CommandHandler extends WebSocketHandler{
     
 	// HashMap with all available commands as key and the class for the Command as value
-	public static HashMap<String, CommandExecutor> commands = new HashMap<String, CommandExecutor>();
+	private static HashMap<String, CommandExecutor> commands = new HashMap<String, CommandExecutor>();
 	/**
 	 * <h1></h1>
 	 * <p>
@@ -81,7 +81,7 @@ public abstract class CommandHandler extends WebSocketHandler{
 	            
 	        }catch(JsonSyntaxException ex){
 	        	// Oops! JsonParse error... lets send the player a message :D Why not.
-	        	player.sendMessage("Oops! There was an error! :(", Color.RED);
+	        	player.sendMessage("Da is jetztala aber wat schief jelofen. Isch meine... der Befehl is jetz nischt nischt da, aber auch nischt da... irgendwie... :(", Color.RED);
 	            return;
 	        }  
 		}              
