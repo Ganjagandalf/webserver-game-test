@@ -1,15 +1,16 @@
 package game;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import game.player.Player;
 import io.netty.channel.ChannelHandlerContext;
 
 public class Server {
-	private static ArrayList<Player> PLAYERS = new ArrayList<>();
-	
+	private static List<Player> PLAYERS = Collections.synchronizedList(new ArrayList<>());
 	// gives all Players wich are registered atm
-	public static ArrayList<Player> getOnlinePlayers() {
+	public static List<Player> getOnlinePlayers() {
 		return PLAYERS;
 	}
 	

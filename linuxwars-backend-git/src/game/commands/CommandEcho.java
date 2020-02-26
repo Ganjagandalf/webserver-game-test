@@ -21,6 +21,7 @@ public class CommandEcho extends WebSocketHandler implements CommandExecutor{
 	        }   
 	        if(args.size() > 0){
 	            player.sendMessage(String.join(" ", args), Colors.DEFAULT.getColor(color));
+	            player.credits += 1;
 	        }else{
 	            player.sendMessage("Wrong syntax. Usage:'echo <message>'", Colors.RED);
 	            player.sendMessage("    --color <color> => Text gets printed out in the given color", Colors.RED);

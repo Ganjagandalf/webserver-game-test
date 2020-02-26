@@ -24,11 +24,23 @@ public class CommandLogin implements CommandExecutor{
 					for(HashMap<String, String> res : result) {
 						if(res.get("username").equals(username)) {
 							if(Encode.sha512(password).equals(res.get("password"))) {
+								try {
+									HashMap<String, String> result_credits = LinuxwarsBackend.DB_CON.executeResults("SELECT * FROM `credits` WHERE `id`=" + Integer.valueOf(res.get("id"))).get(0);
+									if(result.isEmpty()) {
+										LinuxwarsBackend.DB_CON.execute("INSERT INTO `browsergame`.`credits`(`id`,`credits`) VALUES ("+Integer.valueOf(res.get("id"))+",10000);");
+										player.setCredits(10000);
+									}else {
+										player.setCredits(Integer.valueOf(result_credits.get("credits")));
+									}
+									player.setPlayerid(Integer.valueOf(res.get("id")));
+								} catch (SQLException | IndexOutOfBoundsException e) {
+									LinuxwarsBackend.DB_CON.execute("INSERT INTO `browsergame`.`credits`(`id`,`credits`) VALUES ("+Integer.valueOf(res.get("id"))+",10000);");
+									player.setCredits(10000);
+								}
 								player.setLoggedIn(true);
 								player.setUsername(username);
-								player.setPlayerid(Integer.valueOf(res.get("id")));
 								player.sendMessage(String.format("You are now logged in as %s", username));
-								player.updateLabel(username + "@fakeserver:~$");
+								player.updateLabel(username + "@127.0.0.1:~$");
 								return;
 							}
 						}

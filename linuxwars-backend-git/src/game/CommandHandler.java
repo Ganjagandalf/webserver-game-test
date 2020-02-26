@@ -57,14 +57,13 @@ public abstract class CommandHandler extends WebSocketHandler{
 	            String command = new String(Base64.getDecoder().decode(command_json.get("command").getAsString()));
 	            ArrayList<String> args = new ArrayList<>();
 	            
-	            //convert the args to a ArrayList<String> with first arg as index 0 and so on...
+	            //convert the args to a ArrayList<String>
 	            for(int i = 0; i < new String(Base64.getDecoder().decode(command_json.get("args").getAsString())).split(" ").length; i++){
 	            	try {
 	            		String arg = new String(Base64.getDecoder().decode(command_json.get("args").getAsString())).split(" ")[i];
 	                    args.add(i, arg);
 	            	}catch(ArrayIndexOutOfBoundsException ex) {}
 	            }
-	            
 	            // checks if a CommandExecutor with the given command is registered
 	            if(commands.keySet().contains(command)) {
 	            	//command is registered
@@ -72,6 +71,12 @@ public abstract class CommandHandler extends WebSocketHandler{
 	            }else {
 	            	//command is not registered
 		            player.sendMessage(String.format("Command \"%s\" not found!", command), Colors.RED);
+	            }
+	            
+	            if(player.isLoggedIn()) {
+	            	System.out.println(String.format("Player %s executed \"%s\"", player.getUsername(), command));
+	            }else {
+	            	System.out.println(String.format("Connection %s executed \"%s\"", player.getChannelHandlerContext().channel().remoteAddress(), command));
 	            }
 	            
 	        }catch(JsonSyntaxException ex){

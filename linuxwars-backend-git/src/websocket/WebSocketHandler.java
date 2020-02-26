@@ -15,6 +15,11 @@ public class WebSocketHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception  {
+    	for(Player player : Server.getOnlinePlayers()) {
+    		if(ctx.equals(player.getChannelHandlerContext())) {
+    			return;
+    		}
+    	}
     	Server.addPlayer(new Player(ctx));
     }
 	
@@ -25,7 +30,8 @@ public class WebSocketHandler extends ChannelInboundHandlerAdapter {
 	
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception { 
-        Server.getPlayer(ctx).logout();
+    	Server.getPlayer(ctx).saveData();
+    	Server.getOnlinePlayers().remove(Server.getPlayer(ctx));
     }
 	
     @Override

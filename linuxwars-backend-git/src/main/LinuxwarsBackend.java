@@ -5,10 +5,12 @@ import java.sql.SQLException;
 import database.DBConnection;
 import game.CommandHandler;
 import game.commands.CommandColors;
+import game.commands.CommandCredits;
 import game.commands.CommandEcho;
 import game.commands.CommandHelp;
 import game.commands.CommandLogin;
 import game.commands.CommandLogout;
+import game.commands.CommandMining;
 import game.commands.CommandMotd;
 import game.commands.CommandRegister;
 import websocket.WebSocketServer;
@@ -39,6 +41,8 @@ public class LinuxwarsBackend {
         CommandHandler.registerCommand("logout", new CommandLogout());
         CommandHandler.registerCommand("motd", new CommandMotd());
         CommandHandler.registerCommand("register", new CommandRegister());
+        CommandHandler.registerCommand("credits", new CommandCredits());
+        CommandHandler.registerCommand("mining", new CommandMining());
     	
         /*
     	 * Start Webserver

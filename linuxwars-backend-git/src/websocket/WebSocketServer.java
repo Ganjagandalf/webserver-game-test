@@ -17,6 +17,7 @@ import websocket.WebSocketHandler;
 import websocket.WebSocketSettings;
 
 public class WebSocketServer extends Thread{
+	GameTick tick;
 	public void run() {
 		EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -39,11 +40,10 @@ public class WebSocketServer extends Thread{
                 bootstrap.childOption(ChannelOption.SO_KEEPALIVE, WebSocketSettings.KEEPALIVE);
                 ChannelFuture future = bootstrap.bind(WebSocketSettings.PORT).sync();
                 System.out.println("Server gestartet!");
-                GameTick tick = new GameTick();
+                tick = new GameTick();
                 tick.start();
                 future.channel().closeFuture().sync();
         } catch (Exception ex) {
-        	System.out.println(ex);
         	bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         } finally {
