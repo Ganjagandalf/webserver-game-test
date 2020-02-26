@@ -1,4 +1,4 @@
-package websocket;
+package game.websocket;
 
 import java.nio.charset.Charset;
 

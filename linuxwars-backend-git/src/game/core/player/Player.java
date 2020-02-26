@@ -1,41 +1,45 @@
-package game.player;
+package game.core.player;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-import com.sun.istack.internal.NotNull;
-
-import game.Color;
+import game.core.process.GameProcess;
+import game.core.utils.Color;
+import game.websocket.WebSocketHandler;
 import io.netty.channel.ChannelHandlerContext;
 import main.LinuxwarsBackend;
-import websocket.WebSocketHandler;
+
 
 public class Player {
 	private int player_id;
 	private String session_key;
 	private String username;
-	private List<PlayerProcess> processes = new ArrayList<PlayerProcess>();
+	private List<GameProcess> processes = new ArrayList<GameProcess>();
 	private ChannelHandlerContext client;
 	private boolean loggedin = false;
 	private int credits;
+	private PlayerType playertype;
 	
 	public Player(ChannelHandlerContext client){
 		this.client = client;
-	}
-	
-	public void login(String username, String password) {
-		this.setUsername(username);
+		this.setLoggedIn(false);
+		this.setUsername(null);
+		this.setSessionkey(null);
+		this.setPlayerid(0);
+		this.setProcesses(null);
+		this.setPlayertype(PlayerType.USER);
 	}
 	
 	public void logout() {
-		this.loggedin = false;
-		this.username = null;
-		this.session_key = null;
-		this.player_id = 0;
-		this.processes = null;
 		this.saveData();
+		this.setLoggedIn(false);
+		this.setUsername(null);
+		this.setSessionkey(null);
+		this.setPlayerid(0);
+		this.setProcesses(null);
+		this.setPlayertype(null);
 	}
 	
 	/**
@@ -46,7 +50,7 @@ public class Player {
 	 * @param message as {@link String}
 	 * @param color as {@link Color}
 	 */
-	public void sendMessage(@NotNull String message,@NotNull Color color) {
+	public void sendMessage(String message, Color color) {
 		WebSocketHandler.channelSendMessage("{\"type\":\"println\",\"message\":\""+Base64.getEncoder().encodeToString(message.getBytes())+"\",\"color\":\""+color.getColor()+"\"}", this.client);
 	}
 	
@@ -57,7 +61,7 @@ public class Player {
 	 * <p></p>
 	 * @param message as {@link String}
 	 */
-	public void sendMessage(@NotNull String message) {
+	public void sendMessage(String message) {
 		WebSocketHandler.channelSendMessage("{\"type\":\"println\",\"message\":\""+Base64.getEncoder().encodeToString(message.getBytes())+"\",\"color\":\""+Color.DEFAULT.getColor()+"\"}", this.client);
 	}
 		
@@ -68,7 +72,7 @@ public class Player {
 	 * <p></p>
 	 * @param message as {@link String}
 	 */
-	public void updateLabel(@NotNull String label) {
+	public void updateLabel(String label) {
 		WebSocketHandler.channelSendMessage("{\"type\":\"updatelabel\",\"message\":\""+Base64.getEncoder().encodeToString(label.getBytes())+"\"}", this.client);
 	}
 	
@@ -95,7 +99,7 @@ public class Player {
 	 * <p></p>
 	 * param loggedin as {@link True}
 	 */
-	public void setLoggedIn(@NotNull boolean loggedin) {
+	public void setLoggedIn(boolean loggedin) {
 		this.loggedin = loggedin;
 	}
 
@@ -113,7 +117,7 @@ public class Player {
 	 * <p></p>
 	 * @param username as {@link String}
 	 */
-	public void setUsername(@NotNull String username) {
+	public void setUsername(String username) {
 		this.username = username;
 	}
 
@@ -131,7 +135,7 @@ public class Player {
 	 * <p></p>
 	 * @param session_key as {@link String}
 	 */
-	public void setSessionkey(@NotNull String session_key) {
+	public void setSessionkey(String session_key) {
 		this.session_key = session_key;
 	}
 
@@ -149,7 +153,7 @@ public class Player {
 	 * <p></p>
 	 * @param player_id as {@link Integer}
 	 */
-	public void setPlayerid(@NotNull int player_id) {
+	public void setPlayerid(int player_id) {
 		this.player_id = player_id;
 	}
 	
@@ -169,7 +173,7 @@ public class Player {
 	 * <p></p>
 	 * @param new amount of credits as {@link Integer}
 	 */
-	public void setCredits(@NotNull int credits) {
+	public void setCredits(int credits) {
 		this.credits = credits;
 	}
 	
@@ -182,15 +186,47 @@ public class Player {
 		return this.credits;
 	}
 	
-	public void addProcess(@NotNull PlayerProcess process) {
+	/**
+	 * <h1>Adds a {@link PlayerProcess} to the players processes</h1>
+	 * <p></p>
+	 * @param process as {@link PlayerProcess}
+	 */
+	public void addProcess(GameProcess process) {
 		this.processes.add(process);
 	}
 	
-	public List<PlayerProcess> getProcesses(){
+	/**
+	 * <h1>Gets all running {@link PlayerProcess}'s</h1>
+	 * <p></p>
+	 * @return list of running processes as {@link List<PlayerProcess>}
+	 */
+	public List<GameProcess> getProcesses(){
 		return this.processes;
 	}
 	
-	public void removeProcess(@NotNull PlayerProcess process) {
+	/**
+	 * <h1>Sets all running {@link PlayerProcess}'s</h1>
+	 * <p></p>
+	 * @param processes as {@link List<PlayerProcess>}
+	 */
+	public void setProcesses(List<GameProcess> processes){
+		this.processes = processes;
+	}
+	
+	/**
+	 * <h1>Removes a {@link PlayerProcess} from the players processes</h1>
+	 * <p></p>
+	 * @param process as {@link PlayerProcess}
+	 */
+	public void removeProcess(GameProcess process) {
 		this.processes.remove(process);
+	}
+
+	public PlayerType getPlayertype() {
+		return playertype;
+	}
+
+	public void setPlayertype(PlayerType playertype) {
+		this.playertype = playertype;
 	}
 }

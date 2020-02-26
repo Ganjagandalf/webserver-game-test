@@ -2,10 +2,10 @@ package main;
 
 import java.sql.SQLException;
 
-import database.DBConnection;
-import game.CommandHandler;
+import game.core.command.CommandHandler;
 import game.commands.CommandColors;
 import game.commands.CommandCredits;
+import game.commands.CommandDeleteAccount;
 import game.commands.CommandEcho;
 import game.commands.CommandHelp;
 import game.commands.CommandLogin;
@@ -13,7 +13,8 @@ import game.commands.CommandLogout;
 import game.commands.CommandMining;
 import game.commands.CommandMotd;
 import game.commands.CommandRegister;
-import websocket.WebSocketServer;
+import game.core.database.DBConnection;
+import game.websocket.WebSocketServer;
 
 public class LinuxwarsBackend {
 	
@@ -21,20 +22,23 @@ public class LinuxwarsBackend {
 	
 	public static void main(String[] args) {  
     	
-		/*
-    	 * Establish database connection
-    	 */
-    	try {
-			DB_CON = new DBConnection("localhost", "3306", "vincent", "3MHUPao9!");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+    	//Establish database connection
+    	connectToDatabase();
     	
+    	//Register Commands
+    	registerCommands();
     	
-    	/*
-    	 * Register Commands
-    	 */
-    	CommandHandler.registerCommand("colors", new CommandColors());
+    	//Start Webserver
+        startServer();
+    }
+	
+	public static void startServer() {
+		WebSocketServer server = new WebSocketServer();
+        server.start();
+	}
+	
+	public static void registerCommands() {
+		CommandHandler.registerCommand("colors", new CommandColors());
         CommandHandler.registerCommand("echo", new CommandEcho());
         CommandHandler.registerCommand("help", new CommandHelp());
         CommandHandler.registerCommand("login", new CommandLogin());
@@ -43,11 +47,14 @@ public class LinuxwarsBackend {
         CommandHandler.registerCommand("register", new CommandRegister());
         CommandHandler.registerCommand("credits", new CommandCredits());
         CommandHandler.registerCommand("mining", new CommandMining());
-    	
-        /*
-    	 * Start Webserver
-    	 */
-        WebSocketServer server = new WebSocketServer();
-        server.start();
-    }
+        CommandHandler.registerCommand("delete", new CommandDeleteAccount());
+	}
+	
+	public static void connectToDatabase() {
+		try {
+			DB_CON = new DBConnection("localhost", "3306", "vincent", "3MHUPao9!");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }

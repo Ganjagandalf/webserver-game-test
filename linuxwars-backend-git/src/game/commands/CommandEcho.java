@@ -2,14 +2,14 @@ package game.commands;
 
 import java.util.ArrayList;
 
-import game.Color;
-import game.CommandExecutor;
-import game.player.Player;
-import websocket.WebSocketHandler;
+import game.core.command.CommandExecutor;
+import game.core.player.Player;
+import game.core.utils.Color;
 
-public class CommandEcho extends WebSocketHandler implements CommandExecutor{
+public class CommandEcho implements CommandExecutor{
+
 	@Override
-	public void onCommand(ArrayList<String> args, Player player) {
+	public void onCommand(ArrayList<String> args, Player player, boolean needsLogin) {
 		String color = "green";
 		if(player.isLoggedIn()) {
 			for(int i = 0; i < args.size(); i++){

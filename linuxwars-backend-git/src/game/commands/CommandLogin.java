@@ -4,16 +4,17 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import game.Color;
-import game.CommandExecutor;
-import game.Encode;
-import game.player.Player;
+import game.core.command.CommandExecutor;
+import game.core.player.Player;
+import game.core.player.PlayerType;
+import game.core.utils.Color;
+import game.core.utils.Encode;
 import main.LinuxwarsBackend;
 
 public class CommandLogin implements CommandExecutor{
 
 	@Override
-	public void onCommand(ArrayList<String> args, Player player) {
+	public void onCommand(ArrayList<String> args, Player player, boolean needsLogin) {
 		if(!player.isLoggedIn()) {
 			if(args.size() == 2) {
 				String username = args.get(0);
@@ -38,7 +39,13 @@ public class CommandLogin implements CommandExecutor{
 									player.setCredits(10000);
 								}
 								player.setLoggedIn(true);
-								player.setUsername(username);
+								player.setPlayertype(PlayerType.getPlayerType(Integer.parseInt(res.get("powerlevel"))));
+								if(player.getPlayertype().getTitle().length() > 0) {
+									player.setUsername("[" + player.getPlayertype().getTitle() + "]" + username);
+								}else {
+									player.setUsername(username);
+								}
+								
 								player.sendMessage(String.format("You are now logged in as %s", username));
 								player.updateLabel(username + "@127.0.0.1:~$");
 								return;

@@ -1,33 +1,32 @@
-package game.player;
+package game.core.process;
 
 import java.util.Base64;
 import java.util.Date;
 
-import game.Color;
+import game.core.player.Player;
+import game.core.utils.Color;
+import game.websocket.WebSocketHandler;
 import io.netty.channel.ChannelHandlerContext;
-import websocket.WebSocketHandler;
 
-public class PlayerProcess {
+
+public class GameProcess{
 	private static int NEXT_PID;
 	private int process_id;
 	private long process_started;
 	private long process_ends;
-	private ProcessType type;
 	private int creditspertick;
-	private ProcessStatus status;
+	private GameProcessStatus status;
 	
-	public PlayerProcess(int time_needed, ProcessType type) {
+	public GameProcess(int time_needed) {
 		this.setId(NEXT_PID++);
-		this.setStatus(ProcessStatus.PROCESSING);
-		this.setType(type);
+		this.setStatus(GameProcessStatus.PROCESSING);
 		this.setEndTime(new Date().getTime() + (time_needed*1000));
 		this.setStartTime(new Date().getTime());
 	}
 	
-	public PlayerProcess(int time_needed, ProcessType type, int creditspertick) {
+	public GameProcess(int time_needed, int creditspertick) {
 		this.setId(NEXT_PID++);
-		this.setStatus(ProcessStatus.PROCESSING);
-		this.setType(type);
+		this.setStatus(GameProcessStatus.PROCESSING);
 		this.setCreditsPerTick(creditspertick);
 		this.setEndTime(new Date().getTime() + (time_needed*1000));
 		this.setStartTime(new Date().getTime());
@@ -56,24 +55,6 @@ public class PlayerProcess {
 	 */
 	public void updateProcess(String message, Player player) {
 		WebSocketHandler.channelSendMessage("{\"type\":\"updateprocess\",\"message\":\""+Base64.getEncoder().encodeToString(message.getBytes())+"\",\"processid\":\""+this.getId()+"\"}",  player.getChannelHandlerContext());
-	}
-	
-	/**
-	 * <h1>Get the process type</h1>
-	 * <p></p>
-	 * @return processtype as {@link ProcessTypes}
-	 */
-	public ProcessType getType() {
-		return this.type;
-	}
-	
-	/**
-	 * <h1>Set the process type</h1>
-	 * <p></p>
-	 * @param processtype as {@link ProcessTypes}
-	 */
-	public void setType(ProcessType processtype) {
-		this.type = processtype;
 	}
 	
 	/**
@@ -110,11 +91,11 @@ public class PlayerProcess {
 	 * <p></p>
 	 * @param status as {@link ProcessStatus}
 	 */
-	public void setStatus(ProcessStatus status) {
+	public void setStatus(GameProcessStatus status) {
 		this.status = status;
 	}
 	
-	public ProcessStatus getStatus() {
+	public GameProcessStatus getStatus() {
 		return this.status;
 	}
 	
@@ -171,4 +152,7 @@ public class PlayerProcess {
 	public void setEndTime(long process_ends) {
 		this.process_ends = process_ends;
 	}
+
+	// Get called each tick and when the Status is not GameStatus.FINISHED
+	public void doStuff(Player player) {}
 }

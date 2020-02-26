@@ -1,6 +1,6 @@
-package websocket;
+package game.websocket;
 
-import game.GameTick;
+import game.core.GameTick;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -13,8 +13,6 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketServerCompressionHandler;
-import websocket.WebSocketHandler;
-import websocket.WebSocketSettings;
 
 public class WebSocketServer extends Thread{
 	GameTick tick;

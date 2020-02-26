@@ -1,10 +1,10 @@
-package game;
+package game.core;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import game.player.Player;
+import game.core.player.Player;
 import io.netty.channel.ChannelHandlerContext;
 
 public class Server {

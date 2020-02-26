@@ -1,11 +1,11 @@
-package websocket;
+package game.websocket;
 
 import java.util.Base64;
 
-import game.Color;
-import game.CommandHandler;
-import game.Server;
-import game.player.Player;
+import game.core.Server;
+import game.core.command.CommandHandler;
+import game.core.player.Player;
+import game.core.utils.Color;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;

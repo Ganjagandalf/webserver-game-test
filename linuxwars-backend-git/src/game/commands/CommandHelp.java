@@ -4,20 +4,28 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
-import game.Color;
-import game.CommandExecutor;
-import game.CommandHandler;
-import game.player.Player;
+import game.core.command.CommandExecutor;
+import game.core.command.CommandHandler;
+import game.core.player.Player;
+import game.core.utils.Color;
 
 public class CommandHelp implements CommandExecutor{
-
+	
 	@Override
-	public void onCommand(ArrayList<String> args, Player player) {
-		Map<String, CommandExecutor> commands = new TreeMap<>(CommandHandler.commands);
+	public void onCommand(ArrayList<String> args, Player player, boolean needsLogin) {
+		Map<String, CommandExecutor> commands = new TreeMap<>(CommandHandler.getAllCommands());
 		for(String command : commands.keySet()) {
-			player.sendMessage(command + ":");
-			CommandHandler.commands.get(command).printDescription(player);
-		}		
+			CommandExecutor executor = CommandHandler.getCommand(command);
+			if(!player.isLoggedIn()) {
+				if(!CommandHandler.needsLogin(executor)) {
+					player.sendMessage(command + ":");
+					executor.printDescription(player);
+				}
+			}else if(CommandHandler.checkPowerlevel(executor, player)){
+				player.sendMessage(command + ":");
+				executor.printDescription(player);
+			}	
+		}	
 	}
 
 	@Override

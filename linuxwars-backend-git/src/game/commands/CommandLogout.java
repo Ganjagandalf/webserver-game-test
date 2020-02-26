@@ -2,14 +2,16 @@ package game.commands;
 
 import java.util.ArrayList;
 
-import game.Color;
-import game.CommandExecutor;
-import game.player.Player;
+import game.core.command.CommandArgs;
+import game.core.command.CommandExecutor;
+import game.core.player.Player;
+import game.core.utils.Color;
 
 public class CommandLogout implements CommandExecutor{
 
 	@Override
-	public void onCommand(ArrayList<String> args, Player player) {
+	@CommandArgs(needsLogin = true)
+	public void onCommand(ArrayList<String> args, Player player, boolean needsLogin) {
 		if(player.isLoggedIn()) {
 			player.sendMessage("You are now logged out!", Color.RED);
 			player.logout();
